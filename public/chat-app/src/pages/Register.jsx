@@ -23,18 +23,22 @@ function Register(){
         draggable: true,
         theme:"dark",
     }
+
+    useEffect(()=>{
+        if(localStorage.getItem('chat-app-user')){
+          navigate('/')
+        }
+      },[])
     const handleSubmit= async(event)=>{
         event.preventDefault();
         alert("form");
         if(handleValidation()){
-            console.log("in validation", registerRoute)
+            
             const {password,username,email}=values;
             const {data} = await axios.post(registerRoute,{
                 username,
                 email,
                 password,
-            },{
-                headers:"application/json"
             });
             if (data.status=== false){
                 toast.error(data.msg, toastOptions)
@@ -46,6 +50,7 @@ function Register(){
             }
         }
     }
+
 
     const handleValidation=()=>{
         const {password,confirmPassword,username,email}=values;
