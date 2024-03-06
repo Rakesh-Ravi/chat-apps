@@ -37,11 +37,14 @@ export default function SetAvatar(){
               image:avatars[selectedAvatar],
 
            });
+           
             if(data.isSet){
+              console.log(data)
               user.isAvatarImageSet=true;
               user.avatarImage=data.image;
               localStorage.setItem("chat-app-user",JSON.stringify(user));
-              navigate("/")
+                navigate("/");
+              console.log('hi')
             } 
             else{
               toast.error("Error setting avatar. Please try again", toastOptions)
@@ -52,18 +55,17 @@ export default function SetAvatar(){
       const fetchData = async () => {
         const data = [];
         // foreach doesn't work with APIs
-        let image;
-        for (let i = 0; i < 4; i++) {
-           image = await axios.get(
-            `${api}/${Math.round(Math.random() * 1000)}`
-           
-          );
-          await new Promise(resolve => setTimeout(resolve, 1000)); 
-          const buffer = new Buffer.from(image.data);
-          data.push(buffer.toString("base64"));
+       let image;
+       for (let i = 0; i < 4; i++) {
+         image = await axios.get(
+          `${api}/${Math.round(Math.random() * 1000)}`
+        );
+        const buffer = new Buffer(image.data);
+        data.push(buffer.toString("base64"));
+      }
           
-        }
-        console.log(image.data)
+   
+        
         setAvatars(data);
         setIsLoading(false);
         
@@ -72,41 +74,46 @@ export default function SetAvatar(){
       fetchData();
     }, []);
 
-   return (<>
-      {
-        isLoading? <Container>
-             <img src={loader} alt="loader" className='loader' />
-        </Container>:(
-          ""
-        )
-      }
-      <Container>
-        <div className="title-container">
-            <h1>
-                Pick an avatar as your profile picture
-            </h1>
-            <div className="avatars">{
-                avatars.map( (avatar,index)  => {
-                   return (
-                    <div key={index} className={`avatar ${
-                        selectedAvatar===index? "selected":""
-                    }`}>
-                      
-                     <img src={`data:image/svg+xml;base64,${avatar}`} alt="avatar" onClick={()=>setSelectedAvatar(index)} />
-                    </div>
-                   )
-                })
-            }
-               
+    return (
+      <>
+        {isLoading ? (
+          <Container>
+            <img src={loader} alt="loader" className="loader" />
+          </Container>
+        ) : (
+          <Container>
+            <div className="title-container">
+              <h1>Pick an Avatar as your profile picture</h1>
             </div>
-        </div>
-        <button className='submit-btn' onClick={setProfilePicture}>Set as Profile Picture</button>
-        <ToastContainer/>
-      </Container>
-      
-   </>)
-}
-
+            <div className="avatars">
+              {avatars.map((avatar, index) => {
+                return (
+                  <div
+                    className={`avatar ${
+                      selectedAvatar === index ? "selected" : ""
+                    }`}
+                    key={index}
+                  >
+                    <img
+                      src={`data:image/svg+xml;base64,${avatar}`}
+                      alt="avatar"
+                      key={avatar}
+                      onClick={() => setSelectedAvatar(index)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <button onClick={setProfilePicture} className="submit-btn">
+              Set as Profile Picture
+            </button>
+            <ToastContainer />
+          </Container>
+        )}
+      </>
+    );
+  }
+  
 const Container = styled.div`
   display:flex;
   justify-content:center;
