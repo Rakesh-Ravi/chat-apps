@@ -18,7 +18,7 @@ app.use("/api/messages", messageRoute);
 
 //const password = encodeURIComponent("abcd1234");
 
-const url = `mongodb+srv://rrakesh:Rakesh02@cluster0.wdwnag8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+//const url = `mongodb+srv://rrakesh:Rakesh02@cluster0.wdwnag8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 
 const connectionParams = {
     useNewUrlParser: true,
@@ -26,7 +26,7 @@ const connectionParams = {
     useUnifiedTopology: true
 }
 
-mongoose.connect(url)
+mongoose.connect(process.env.MONGO_URL)
     .then(() => {
         console.log('Connected to database');
     })
